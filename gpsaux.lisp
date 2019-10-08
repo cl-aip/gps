@@ -1,6 +1,9 @@
-;;; -*- Mode: Lisp; Syntax: Common-Lisp -*-
+;;;-*- Mode: common-lisp; syntax: common-lisp; package: gps; base: 10 -*-
 ;;; Code from Paradigms of AI Programming
 ;;; Copyright (c) 1991 Peter Norvig
+
+(defpackage gps (:use :cl))
+(in-package :gps)
 
 ;;; File gpsaux.lisp is a file dedicated to only gps programs.
 ;;; Load this file before running any other gps programs.

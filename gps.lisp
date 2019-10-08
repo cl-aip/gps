@@ -1,4 +1,4 @@
-;;; -*- Mode: Lisp; Syntax: Common-Lisp; -*-
+;;;-*- Mode: common-lisp; syntax: common-lisp; package: gps; base: 10 -*-
 ;;; Code from Paradigms of Artificial Intelligence Programming
 ;;; Copyright (c) 1991 Peter Norvig
 
@@ -8,6 +8,8 @@
 (require :gps1)       ; by seiji
 
 ;;; ==============================
+
+(in-package :gps)
 
 (defun executing-p (x)
   "Is x of the form: (executing ...) ?"
@@ -148,7 +150,7 @@
 
 ;;; ==============================
 
-(defun GPS (state goals &optional (*ops* *ops*))
+(defun GPS* (state goals &optional (*ops* *ops*))
   "General Problem Solver: from state, achieve goals using *ops*."
   (find-all-if #'action-p
                (achieve-all (cons '(start) state) goals nil)))
