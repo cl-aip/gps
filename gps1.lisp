@@ -19,13 +19,6 @@
   "General Problem Solver: achieve all goals using *ops*."
   (if (every #'achieve1 goals) 'solved))
 
-(defun achieve1 (goal)
-  "A goal is achieved if it already holds,
-  or if there is an appropriate op for it that is applicable."
-  (or (member goal *state*)
-      (some #'apply-op1 
-            (find-all goal *ops* :test #'appropriate-p1))))
-
 (defun appropriate-p1 (goal op)
   "An op is appropriate to a goal if it is in its add list."
   (member goal (op-add-list op)))
@@ -37,6 +30,14 @@
     (setf *state* (set-difference *state* (op-del-list op)))
     (setf *state* (union *state* (op-add-list op)))
     t))
+
+(defun achieve1 (goal)
+  "A goal is achieved if it already holds,
+  or if there is an appropriate op for it that is applicable."
+  (or (member goal *state*)
+      (some #'apply-op1 
+            (find-all goal *ops* :test #'appropriate-p1))))
+
 #|
 (defun achieve1 (goal)
   "A goal is achieved if it already holds,

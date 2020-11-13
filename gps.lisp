@@ -224,6 +224,15 @@
 
 ;;; ==============================
 
+(defun appropriate-ops (goal state)
+  "Return a list of appropriate operators, 
+  sorted by the number of unfulfilled preconditions."
+  (sort (copy-list (find-all goal *ops* :test #'appropriate-p)) #'<
+        :key #'(lambda (op) 
+                 (count-if #'(lambda (precond)
+                               (not (member-equal precond state)))
+                           (op-preconds op)))))
+                           
 (defun achieve (state goal goal-stack)
   "A goal is achieved if it already holds,
   or if there is an appropriate op for it that is applicable."
@@ -233,14 +242,6 @@
         (t (some #'(lambda (op) (apply-op state goal op goal-stack))
                  (appropriate-ops goal state))))) ;***
 
-(defun appropriate-ops (goal state)
-  "Return a list of appropriate operators, 
-  sorted by the number of unfulfilled preconditions."
-  (sort (copy-list (find-all goal *ops* :test #'appropriate-p)) #'<
-        :key #'(lambda (op) 
-                 (count-if #'(lambda (precond)
-                               (not (member-equal precond state)))
-                           (op-preconds op)))))
 
 ;;; ==============================
 
