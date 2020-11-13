@@ -150,7 +150,7 @@
        (23 18) (23 24) (24 19) (19 20) (20 15) (15 10) (10 5) (20 25))))
 
 ;;; ==============================
-
+#|
 (defun GPS* (state goals &optional (*ops* *ops*))
   "General Problem Solver: from state, achieve goals using *ops*."
   (find-all-if #'action-p
@@ -261,6 +261,6 @@
                           (permutations
                             (remove e bag :count 1 :test #'eq))))
               bag)))
-
+|#
 ;;; ==============================
 
