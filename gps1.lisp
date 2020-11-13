@@ -15,10 +15,6 @@
 (defstruct op "An operation"
   (action nil) (preconds nil) (add-list nil) (del-list nil))
 
-(defun GPS1 (*state* goals &optional (*ops* *ops*))
-  "General Problem Solver: achieve all goals using *ops*."
-  (if (every #'achieve1 goals) 'solved))
-
 (defun appropriate-p1 (goal op)
   "An op is appropriate to a goal if it is in its add list."
   (member goal (op-add-list op)))
@@ -38,15 +34,11 @@
       (some #'apply-op1 
             (find-all goal *ops* :test #'appropriate-p1))))
 
-#|
-(defun achieve1 (goal)
-  "A goal is achieved if it already holds,
-  or if there is an appropriate op for it that is applicable."
-  (print *state*)
-  (or (member goal *state* :test #'equal)
-      (some #'apply-op1 
-            (find-all goal *ops* :test #'appropriate-p1))))
+(defun GPS1 (*state* goals &optional (*ops* *ops*))
+  "General Problem Solver: achieve all goals using *ops*."
+  (if (every #'achieve1 goals) 'solved))
 
+#|
 (defun appropriate-p1 (goal op)
   "An op is appropriate to a goal if it is in its add list."
   (member goal (op-add-list op) :test #'equal))
@@ -59,11 +51,22 @@
     (setf *state* (union *state* (op-add-list op) :test #'equal))
     t))
 
+(defun apply-op1 (op goal-stack)
+  "Print a message and update *state* if op is applicable."
+  (print (list 'applying (op-action op)))
+  (when (every #'(lambda (g) (achieve1 g goal-stack)) (op-preconds op))
+    (print (list 'executing (op-action op)))
+    (setf *state* (set-difference *state* (op-del-list op) :test #'equal))
+    (setf *state* (union *state* (op-add-list op) :test #'equal))
+    t))
 
-
-(defun GPS1 (*state* goals &optional (*ops* *ops*))
-  "General Problem Solver: achieve all goals using *ops*."
-  (when (every #'(lambda (g) (achieve1 g nil)) goals) 'solved))
+(defun achieve1 (goal)
+  "A goal is achieved if it already holds,
+  or if there is an appropriate op for it that is applicable."
+  (print *state*)
+  (or (member goal *state* :test #'equal)
+      (some #'apply-op1 
+            (find-all goal *ops* :test #'appropriate-p1))))
 
 (defun achieve1 (goal goal-stack)
   "A goal is achieved if it already holds,
@@ -73,14 +76,9 @@
         (t (some #'(lambda (op) (apply-op1 op (cons goal goal-stack)))
              (remove-if-not #'(lambda (op) (appropriate-p1 goal op)) *ops*)))))
 
-(defun apply-op1 (op goal-stack)
-  "Print a message and update *state* if op is applicable."
-  (print (list 'applying (op-action op)))
-  (when (every #'(lambda (g) (achieve1 g goal-stack)) (op-preconds op))
-    (print (list 'executing (op-action op)))
-    (setf *state* (set-difference *state* (op-del-list op) :test #'equal))
-    (setf *state* (union *state* (op-add-list op) :test #'equal))
-    t))
+(defun GPS1 (*state* goals &optional (*ops* *ops*))
+  "General Problem Solver: achieve all goals using *ops*."
+  (when (every #'(lambda (g) (achieve1 g nil)) goals) 'solved))
 |#
 ;;; ==============================
 (defparameter *space-robot-ops*
