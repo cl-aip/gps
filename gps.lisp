@@ -44,10 +44,11 @@
 
 ;;; ==============================
 
-(defvar *ops* nil "A list of available operators.")
+;;;(defvar *ops* nil "A list of available operators.")
 
-(defstruct op "An operation"
-  (action nil) (preconds nil) (add-list nil) (del-list nil));;; ==============================
+;;;(defstruct op "An operation"
+;;;  (action nil) (preconds nil) (add-list nil) (del-list nil))
+;;; ==============================
 
 (defun apply-op (state goal op goal-stack)
   "Return a new, transformed state if op is applicable."
